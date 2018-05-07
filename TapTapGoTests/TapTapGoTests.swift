@@ -72,33 +72,29 @@ class TapTapGoTests: XCTestCase {
     }
     
     func testTapDoesNotIncrementScoreAfterTimerEnd() {
-        let tapSource = PublishSubject<()>()
-        let viewModel = ViewModel(tapSource: tapSource)
+        // Input
+        let tapSource = scheduler.createHotObservable([
+            Recorded.next(5, ()),
+            Recorded.next(11, ())
+            ])
         
-        let noIncrementExpectation = expectation(description: "score should remain 1 after timer end")
-        noIncrementExpectation.isInverted = true
+        // SUT
+        let viewModel = ViewModel(tapSource: tapSource.asObservable(),
+                                  period: 1.0,
+                                  scheduler: scheduler)
         
-        viewModel.score
-            .subscribe {
-                switch $0 {
-                case .next(let score):
-                    if score > 1 {
-                        noIncrementExpectation.fulfill()
-                    }
-                case .error(_):
-                    XCTFail()
-                case .completed:
-                    break
-                }
-            }.disposed(by: disposeBag)
+        // Output
+        let results = scheduler.createObserver(Int.self)
+        scheduler.scheduleAt(0) {
+            viewModel.score.subscribe(results).disposed(by: self.disposeBag)
+        }
+        scheduler.start()
         
-        tapSource.onNext(())
-        
-        Observable<Int>.timer(5.1, period: nil, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { _ in
-                tapSource.onNext(())
-            }).disposed(by: disposeBag)
-        
-        wait(for: [noIncrementExpectation], timeout: 6.0)
+        // Compare
+        let expected = [
+            Recorded.next(5, 1),
+            Recorded.completed(10)
+        ]
+        XCTAssertEqual(results.events, expected)
     }
 }
