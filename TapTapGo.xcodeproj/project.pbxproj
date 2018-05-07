@@ -14,6 +14,7 @@
 		3A79EBDE209FDD6A00A84E33 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A79EBDD209FDD6A00A84E33 /* Assets.xcassets */; };
 		3A79EBE1209FDD6A00A84E33 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A79EBDF209FDD6A00A84E33 /* LaunchScreen.storyboard */; };
 		3A79EBEC209FDD6A00A84E33 /* TapTapGoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A79EBEB209FDD6A00A84E33 /* TapTapGoTests.swift */; };
+		3A79EBF7209FE37900A84E33 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A79EBF6209FE37900A84E33 /* ViewModel.swift */; };
 		D6CA68A278BFAEC53E644FC9 /* Pods_TapTapGoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 202A19490CC10DECE079CE64 /* Pods_TapTapGoTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		3A79EBE7209FDD6A00A84E33 /* TapTapGoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TapTapGoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A79EBEB209FDD6A00A84E33 /* TapTapGoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapTapGoTests.swift; sourceTree = "<group>"; };
 		3A79EBED209FDD6A00A84E33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A79EBF6209FE37900A84E33 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		3CA9E995FF1135AD731E3B9D /* Pods-TapTapGoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TapTapGoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TapTapGoTests/Pods-TapTapGoTests.release.xcconfig"; sourceTree = "<group>"; };
 		D8040FC01603DFE585071227 /* Pods-TapTapGoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TapTapGoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TapTapGoTests/Pods-TapTapGoTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +102,7 @@
 			children = (
 				3A79EBD6209FDD6900A84E33 /* AppDelegate.swift */,
 				3A79EBD8209FDD6900A84E33 /* ViewController.swift */,
+				3A79EBF6209FE37900A84E33 /* ViewModel.swift */,
 				3A79EBDA209FDD6900A84E33 /* Main.storyboard */,
 				3A79EBDD209FDD6A00A84E33 /* Assets.xcassets */,
 				3A79EBDF209FDD6A00A84E33 /* LaunchScreen.storyboard */,
@@ -315,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A79EBD9209FDD6900A84E33 /* ViewController.swift in Sources */,
+				3A79EBF7209FE37900A84E33 /* ViewModel.swift in Sources */,
 				3A79EBD7209FDD6900A84E33 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -478,7 +482,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TapTapGo/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyz.TapTapGo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -493,7 +500,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TapTapGo/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyz.TapTapGo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -509,7 +519,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TapTapGoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyz.TapTapGoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -526,7 +540,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TapTapGoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.xyz.TapTapGoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

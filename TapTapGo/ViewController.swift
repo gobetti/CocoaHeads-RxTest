@@ -11,6 +11,7 @@ import UIKit
 
 class ViewController: UIViewController {
     private let disposeBag = DisposeBag()
+    private lazy var viewModel = ViewModel(tapSource: self.tapButton.rx.tap.map { _ in })
     
     @IBOutlet weak var tapButton: UIButton!
     @IBOutlet weak var remainingTimeLabel: UILabel!
@@ -19,9 +20,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tapButton.rx.tap
-            .enumerated()
-            .map { index, _ in "\(index + 1)" }
+        viewModel.score.map { "\($0)" }
             .bind(to: scoreLabel.rx.text)
             .disposed(by: disposeBag)
     }
