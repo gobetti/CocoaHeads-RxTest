@@ -6,44 +6,43 @@
 //
 
 import RxSwift
+import RxTest
 import XCTest
 @testable import TapTapGo
 
 class TapTapGoTests: XCTestCase {
     var disposeBag: DisposeBag!
+    var scheduler: TestScheduler!
     
     override func setUp() {
         super.setUp()
         disposeBag = DisposeBag()
+        scheduler = TestScheduler(initialClock: 0)
     }
     
     func testTapIncrementsScore() {
-        let tapsCount = 2
-        let tapSource = PublishSubject<()>()
-        let viewModel = ViewModel(tapSource: tapSource)
+        // Input
+        let tapSource = scheduler.createHotObservable([
+            Recorded.next(5, ()),
+            Recorded.next(6, ())
+            ])
         
-        let scoreExpectation = expectation(description: "score = 2")
+        // SUT
+        let viewModel = ViewModel(tapSource: tapSource.asObservable())
         
-        viewModel.score.subscribe {
-            switch $0 {
-            case .next(let score):
-                if score == tapsCount {
-                    scoreExpectation.fulfill()
-                } else if score > tapsCount {
-                    XCTFail()
-                }
-            case .error(_):
-                XCTFail()
-            case .completed:
-                XCTFail()
-            }
-        }.disposed(by: disposeBag)
-        
-        for _ in 1...tapsCount {
-            tapSource.onNext(())
+        // Output
+        let results = scheduler.createObserver(Int.self)
+        scheduler.scheduleAt(0) {
+            viewModel.score.subscribe(results).disposed(by: self.disposeBag)
         }
+        scheduler.start()
         
-        wait(for: [scoreExpectation], timeout: 1.0)
+        // Compare
+        let expected = [
+            Recorded.next(5, 1),
+            Recorded.next(6, 2)
+        ]
+        XCTAssertEqual(results.events, expected)
     }
     
     func testTapStartsTimer() {
