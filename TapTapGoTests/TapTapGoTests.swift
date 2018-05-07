@@ -52,7 +52,8 @@ class TapTapGoTests: XCTestCase {
             ])
         
         // SUT
-        let viewModel = ViewModel(tapSource: tapSource.asObservable())
+        let viewModel = ViewModel(tapSource: tapSource.asObservable(),
+                                  scheduler: scheduler)
         
         // Output
         let results = scheduler.createObserver(RxTimeInterval.self)
