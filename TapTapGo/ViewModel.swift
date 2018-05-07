@@ -14,14 +14,16 @@ struct ViewModel {
     let score: Observable<Int>
     let timer: Observable<RxTimeInterval>
     
-    init(tapSource: Observable<()>, scheduler: SchedulerType = MainScheduler.instance) {
+    init(tapSource: Observable<()>,
+         period: RxTimeInterval = ViewModel.period,
+         scheduler: SchedulerType = MainScheduler.instance) {
         let timer = tapSource
             .take(1)
             .flatMap { _ in
                 Observable<Int>.timer(0,
-                                      period: ViewModel.period,
+                                      period: period,
                                       scheduler: scheduler)
-            }.map { RxTimeInterval($0) * ViewModel.period }
+            }.map { RxTimeInterval($0) * period }
             .map { ViewModel.duration - $0 }
             .takeWhile { $0 >= 0 }
         

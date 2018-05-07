@@ -53,6 +53,7 @@ class TapTapGoTests: XCTestCase {
         
         // SUT
         let viewModel = ViewModel(tapSource: tapSource.asObservable(),
+                                  period: 1.0,
                                   scheduler: scheduler)
         
         // Output
@@ -64,9 +65,10 @@ class TapTapGoTests: XCTestCase {
         
         // Compare
         let expected = [
-            Recorded.next(5, 5.0)
+            Recorded.next(5, 5.0),
+            Recorded.next(6, 4.0)
         ]
-        XCTAssertEqual(results.events, expected)
+        XCTAssertEqual(Array(results.events.prefix(2)), expected)
     }
     
     func testTapDoesNotIncrementScoreAfterTimerEnd() {
