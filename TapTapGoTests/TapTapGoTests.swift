@@ -45,4 +45,46 @@ class TapTapGoTests: XCTestCase {
         
         wait(for: [scoreExpectation], timeout: 1.0)
     }
+    
+    func testTapStartsTimer() {
+        let tapSource = PublishSubject<()>()
+        let viewModel = ViewModel(tapSource: tapSource)
+        
+        let noTimerBeforeTapExpectation = expectation(description: "no timer events before tap")
+        noTimerBeforeTapExpectation.isInverted = true
+        
+        viewModel.timer
+            .takeUntil(tapSource)
+            .subscribe {
+                switch $0 {
+                case .next(_):
+                    noTimerBeforeTapExpectation.fulfill()
+                case .error(_):
+                    XCTFail()
+                case .completed:
+                    break
+                }
+            }.disposed(by: disposeBag)
+        
+        let timerStartsOnTapExpectation = expectation(description: "timer emits 4.0 less than 1.5 second after tap")
+        
+        viewModel.timer
+            .subscribe {
+                switch $0 {
+                case .next(let time):
+                    if time == 4.0 {
+                        timerStartsOnTapExpectation.fulfill()
+                    }
+                case .error(_):
+                    XCTFail()
+                case .completed:
+                    XCTFail()
+                }
+            }.disposed(by: disposeBag)
+        
+        tapSource.onNext(())
+        
+        wait(for: [noTimerBeforeTapExpectation,
+                   timerStartsOnTapExpectation], timeout: 1.5)
+    }
 }

@@ -23,6 +23,10 @@ class ViewController: UIViewController {
         viewModel.score.map { "\($0)" }
             .bind(to: scoreLabel.rx.text)
             .disposed(by: disposeBag)
+        
+        viewModel.timer.map { String(format: "%.1f", $0) }
+            .bind(to: remainingTimeLabel.rx.text)
+            .disposed(by: disposeBag)
     }
 }
 
