@@ -87,4 +87,35 @@ class TapTapGoTests: XCTestCase {
         wait(for: [noTimerBeforeTapExpectation,
                    timerStartsOnTapExpectation], timeout: 1.5)
     }
+    
+    func testTapDoesNotIncrementScoreAfterTimerEnd() {
+        let tapSource = PublishSubject<()>()
+        let viewModel = ViewModel(tapSource: tapSource)
+        
+        let noIncrementExpectation = expectation(description: "score should remain 1 after timer end")
+        noIncrementExpectation.isInverted = true
+        
+        viewModel.score
+            .subscribe {
+                switch $0 {
+                case .next(let score):
+                    if score > 1 {
+                        noIncrementExpectation.fulfill()
+                    }
+                case .error(_):
+                    XCTFail()
+                case .completed:
+                    break
+                }
+            }.disposed(by: disposeBag)
+        
+        tapSource.onNext(())
+        
+        Observable<Int>.timer(5.1, period: nil, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { _ in
+                tapSource.onNext(())
+            }).disposed(by: disposeBag)
+        
+        wait(for: [noIncrementExpectation], timeout: 6.0)
+    }
 }
