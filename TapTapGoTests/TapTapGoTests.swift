@@ -17,7 +17,7 @@ class TapTapGoTests: XCTestCase {
     override func setUp() {
         super.setUp()
         disposeBag = DisposeBag()
-        scheduler = TestScheduler(initialClock: 0)
+        scheduler = TestScheduler(initialClock: 0, simulateProcessingDelay: false)
     }
     
     func testTapIncrementsScore() {
