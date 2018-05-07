@@ -46,45 +46,26 @@ class TapTapGoTests: XCTestCase {
     }
     
     func testTapStartsTimer() {
-        let tapSource = PublishSubject<()>()
-        let viewModel = ViewModel(tapSource: tapSource)
+        // Input
+        let tapSource = scheduler.createHotObservable([
+            Recorded.next(5, ())
+            ])
         
-        let noTimerBeforeTapExpectation = expectation(description: "no timer events before tap")
-        noTimerBeforeTapExpectation.isInverted = true
+        // SUT
+        let viewModel = ViewModel(tapSource: tapSource.asObservable())
         
-        viewModel.timer
-            .takeUntil(tapSource)
-            .subscribe {
-                switch $0 {
-                case .next(_):
-                    noTimerBeforeTapExpectation.fulfill()
-                case .error(_):
-                    XCTFail()
-                case .completed:
-                    break
-                }
-            }.disposed(by: disposeBag)
+        // Output
+        let results = scheduler.createObserver(RxTimeInterval.self)
+        scheduler.scheduleAt(0) {
+            viewModel.timer.subscribe(results).disposed(by: self.disposeBag)
+        }
+        scheduler.start()
         
-        let timerStartsOnTapExpectation = expectation(description: "timer emits 4.0 less than 1.5 second after tap")
-        
-        viewModel.timer
-            .subscribe {
-                switch $0 {
-                case .next(let time):
-                    if time == 4.0 {
-                        timerStartsOnTapExpectation.fulfill()
-                    }
-                case .error(_):
-                    XCTFail()
-                case .completed:
-                    XCTFail()
-                }
-            }.disposed(by: disposeBag)
-        
-        tapSource.onNext(())
-        
-        wait(for: [noTimerBeforeTapExpectation,
-                   timerStartsOnTapExpectation], timeout: 1.5)
+        // Compare
+        let expected = [
+            Recorded.next(5, 5.0)
+        ]
+        XCTAssertEqual(results.events, expected)
     }
     
     func testTapDoesNotIncrementScoreAfterTimerEnd() {
